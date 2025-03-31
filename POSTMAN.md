@@ -1,127 +1,167 @@
-# Postman Documentation
 
-This document provides instructions for testing the User Profile Management API using Postman.
 
-## Setting Up Postman
+# Postman Documentation for User Profile Management API
 
-1. Download and install [Postman](https://www.postman.com/downloads/)
-2. Create a new Postman Collection named "User Profile API"
+This document provides instructions for testing the **User Profile Management API** using Postman.
 
-## Environment Setup
+---
 
-1. Create a new environment in Postman (e.g., "User Profile API Environment")
-2. Add the following variables:
-   - `baseUrl`: http://localhost:5000/api
-   - `token`: (leave empty initially)
+## **Setting Up Postman**
 
-## Importing the Collection
+1. **Download and Install Postman**:  
+   Ensure you have Postman installed on your machine. If not, download it from [here](https://www.postman.com/downloads/).
 
-You can import the collection using the following steps:
+2. **Create a New Postman Collection**:  
+   - Open Postman and create a new collection named **"User Profile API"**.
 
-1. In Postman, click on "Import" button
-2. Select "Raw text" and paste the collection JSON (provided separately)
-3. Click "Import"
+---
 
-## Testing Endpoints
+## **Environment Setup**
 
-### Register User
+1. **Create a New Environment in Postman**:  
+   - Click on the **Environment** dropdown in the top-right corner and select **"Manage Environments"**.
+   - Click on **"Add"** to create a new environment.
+   - Name it **"User Profile API Environment"**.
 
-1. Select the "Register User" request
-2. Ensure the request URL is set to `{{baseUrl}}/auth/register`
-3. In the "Body" tab, select "raw" and "JSON"
-4. Enter the following JSON:
-   \`\`\`json
-   {
-     "name": "John Doe",
-     "email": "john@example.com",
-     "password": "password123",
-     "address": "123 Main St, City, Country",
-     "bio": "Software developer",
-     "profilePicture": "https://example.com/profile.jpg"
-   }
-   \`\`\`
-5. Click "Send"
-6. You should receive a 201 Created response with user details and a token
-7. In the "Tests" tab, add the following script to automatically save the token:
-   \`\`\`javascript
-   var jsonData = pm.response.json();
-   if (jsonData.token) {
-     pm.environment.set("token", jsonData.token);
-   }
-   \`\`\`
+2. **Add the Following Variables**:
+   - `baseUrl`: `http://localhost:5000/api`
+   - `token`: *(Leave empty initially)*
 
-### Login User
+---
 
-1. Select the "Login User" request
-2. Ensure the request URL is set to `{{baseUrl}}/auth/login`
-3. In the "Body" tab, enter:
-   \`\`\`json
-   {
-     "email": "john@example.com",
-     "password": "password123"
-   }
-   \`\`\`
-4. Click "Send"
-5. You should receive a 200 OK response with user details and a token
-6. The test script will automatically save the token to your environment
+## **Importing the Collection**
 
-### Get User Profile
+1. In Postman, click on the **"Import"** button.
+2. Select **"Raw text"** and paste the collection JSON (provided separately).
+3. Click **"Import"** to import the collection into Postman.
 
-1. Select the "Get User Profile" request
-2. Ensure the request URL is set to `{{baseUrl}}/users/profile`
-3. In the "Authorization" tab, select "Bearer Token" and enter `{{token}}`
-4. Click "Send"
-5. You should receive a 200 OK response with the user profile details
+---
 
-### Update User Profile
+## **Testing Endpoints**
 
-1. Select the "Update User Profile" request
-2. Ensure the request URL is set to `{{baseUrl}}/users/profile`
-3. In the "Authorization" tab, select "Bearer Token" and enter `{{token}}`
-4. In the "Body" tab, enter the fields you want to update:
-   \`\`\`json
-   {
-     "name": "John Smith",
-     "bio": "Senior Software Engineer",
-     "address": "456 New St, City, Country"
-   }
-   \`\`\`
-5. Click "Send"
-6. You should receive a 200 OK response with the updated user profile
+### **1. Register User**
 
-### Get User by ID
+- **Request URL**: `{{baseUrl}}/auth/register`
+- **Method**: `POST`
+- **Body** (select **raw** and **JSON**):
+  ```json
+  {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "address": "123 Main St, City, Country",
+    "bio": "Software developer",
+    "profilePicture": "https://example.com/profile.jpg"
+  }
+  ```
 
-1. Select the "Get User by ID" request
-2. Replace `:id` in the URL with the user ID from the previous responses
-3. In the "Authorization" tab, select "Bearer Token" and enter `{{token}}`
-4. Click "Send"
-5. You should receive a 200 OK response with the user profile details
-6. Try accessing a different user ID to verify the 403 Forbidden response
+- **Steps**:
+  1. Click **"Send"**.
+  2. You should receive a **201 Created** response with user details and a token.
+  3. In the **Tests** tab, add the following script to automatically save the token:
+     ```javascript
+     var jsonData = pm.response.json();
+     if (jsonData.token) {
+       pm.environment.set("token", jsonData.token);
+     }
+     ```
 
-## Collection Runner
+---
 
-You can use Postman's Collection Runner to run all requests in sequence:
+### **2. Login User**
 
-1. Click the "Runner" button
-2. Select the "User Profile API" collection
-3. Select your environment
+- **Request URL**: `{{baseUrl}}/auth/login`
+- **Method**: `POST`
+- **Body**:
+  ```json
+  {
+    "email": "john@example.com",
+    "password": "password123"
+  }
+  ```
+
+- **Steps**:
+  1. Click **"Send"**.
+  2. You should receive a **200 OK** response with user details and a token.
+  3. The test script will automatically save the token to your environment.
+
+---
+
+### **3. Get User Profile**
+
+- **Request URL**: `{{baseUrl}}/users/profile`
+- **Method**: `GET`
+- **Authorization**:
+  - Select **Bearer Token** and enter `{{token}}`.
+
+- **Steps**:
+  1. Click **"Send"**.
+  2. You should receive a **200 OK** response with the user profile details.
+
+---
+
+### **4. Update User Profile**
+
+- **Request URL**: `{{baseUrl}}/users/profile`
+- **Method**: `PUT`
+- **Authorization**:
+  - Select **Bearer Token** and enter `{{token}}`.
+- **Body**:
+  ```json
+  {
+    "name": "John Smith",
+    "bio": "Senior Software Engineer",
+    "address": "456 New St, City, Country"
+  }
+  ```
+
+- **Steps**:
+  1. Click **"Send"**.
+  2. You should receive a **200 OK** response with the updated user profile.
+
+---
+
+### **5. Get User by ID**
+
+- **Request URL**: `{{baseUrl}}/users/:id`
+- **Method**: `GET`
+- **Authorization**:
+  - Select **Bearer Token** and enter `{{token}}`.
+
+- **Steps**:
+  1. Replace `:id` in the URL with the user ID from the previous responses.
+  2. Click **"Send"**.
+  3. You should receive a **200 OK** response with the user profile details.
+  4. To verify the **403 Forbidden** response, try accessing a different user ID.
+
+---
+
+## **Collection Runner**
+
+You can use Postman's **Collection Runner** to run all requests in sequence.
+
+1. Click the **"Runner"** button in Postman.
+2. Select the **"User Profile API"** collection.
+3. Select your environment.
 4. Arrange the requests in the correct order:
    - Register User
    - Login User
    - Get User Profile
    - Update User Profile
    - Get User by ID
-5. Click "Run"
+5. Click **"Run"** to execute the entire collection.
 
-## Postman Collection JSON
+---
 
-You can create a new collection in Postman and add the following requests:
+## **Postman Collection JSON**
 
-1. Register User (POST)
-2. Login User (POST)
-3. Get User Profile (GET)
-4. Update User Profile (PUT)
-5. Get User by ID (GET)
+To use Postman efficiently, you can create a collection with the following requests:
 
-For each request, set the appropriate URL, method, headers, and body as described above.
+1. **Register User** (POST)
+2. **Login User** (POST)
+3. **Get User Profile** (GET)
+4. **Update User Profile** (PUT)
+5. **Get User by ID** (GET)
+
+For each request, ensure that you set the appropriate URL, method, headers, and body, as described in the previous sections.
 
